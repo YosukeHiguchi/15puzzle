@@ -9,6 +9,7 @@ using namespace std;
 
 
 typedef struct {
+    string parent = "";
     string st = "";
     int blank = -1;
     int depth = -1;
@@ -83,10 +84,10 @@ State state_get_random(string s, int shuffle) {
     return ret;
 }
 
-void state_show(State state) {
+void state_show(string s) {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            cout << state.st[i * N + j] << " ";
+            cout << s[i * N + j] << " ";
         }
         cout << endl;
     }
