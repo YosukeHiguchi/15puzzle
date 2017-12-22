@@ -7,23 +7,31 @@ using namespace std;
 
 const string goal = "123456789abcdef-";
 
+long long int ida_itr = 0;
+
 bool astar(State first, int (*f)(State), int limit = -1);
 int h0(State state);
 int h1(State state);
 int h2(State state);
 void show_time(clock_t t);
 
-int main() {
+int main(int argv, char* argc[]) {
     clock_t tic, toc;
+    State first;
 
-    int shuffle;
-    cout << "Input shuffle counts >> ";
-    cin >> shuffle;
+    if (argv > 1 && argc[1][0] == '1') {
+        string s; // 80 moves: -c9dfbae78624351
+        cout << "Input solvable puzzle >> ";
+        cin >> s;
+        first = state_set(s);
+    } else {
+        int shuffle;
+        cout << "Input shuffle counts >> ";
+        cin >> shuffle;
+        first = state_get_random(goal, shuffle);
+    }
 
-    State first = state_get_random(goal, shuffle);
-    //State first = state_set("-c9dfbae78624351"); // 80 moves
-
-    cout << "Problem: " << endl;
+    cout << "\ntarget puzzle:" << endl;
     state_show(first);
 
     cout << "\nSolving puzzle by A* with h0...\n";
@@ -45,32 +53,23 @@ int main() {
     show_time(toc - tic);
 
     cout << "\nSolving puzzle by IDA* with h0...\n";
+    ida_itr = 0;
     tic = clock();
-    for (int limit = 0; limit < 80; limit++) {
-        if (astar(first, h0, limit)) {
-            break;
-        }
-    }
+    for (int limit = 0; limit < 80 && !astar(first, h0, limit); limit++);
     toc = clock();
     show_time(toc - tic);
 
     cout << "\nSolving puzzle by IDA* with h1...\n";
+    ida_itr = 0;
     tic = clock();
-    for (int limit = 0; limit < 80; limit++) {
-        if (astar(first, h1, limit)) {
-            break;
-        }
-    }
+    for (int limit = 0; limit < 80 && !astar(first, h1, limit); limit++);
     toc = clock();
     show_time(toc - tic);
 
     cout << "\nSolving puzzle by IDA* with h2...\n";
+    ida_itr = 0;
     tic = clock();
-    for (int limit = 0; limit < 80; limit++) {
-        if (astar(first, h2, limit)) {
-            break;
-        }
-    }
+    for (int limit = 0; limit < 80 && !astar(first, h2, limit); limit++);
     toc = clock();
     show_time(toc - tic);
 }
@@ -81,22 +80,23 @@ bool astar(State first, int (*f)(State), int limit) {
 
     pq.push(first);
 
-    int loop_cnt = 0;
+    long long int loop_cnt = 0;
 
     while (!pq.empty()) {
         State current = pq.top();
         pq.pop();
 
         if (current.st == goal) {
-            //state_show(current);
-            printf("%-8s%d\n", "moves:", current.depth);
-            printf("%-8s%d\n", "iters:", loop_cnt);
+            printf("%-5s : %d\n", "moves", current.depth);
+            printf("%-5s : %lld\n", "iters", loop_cnt + ida_itr);
 
             return true;
         }
 
-        if (current.cost == limit) {
-            continue;
+        if (limit != -1 && current.cost >= limit) {
+            ida_itr += loop_cnt;
+
+            return false;
         }
 
         closed.insert(current.st);
@@ -153,5 +153,5 @@ int h2(State state) {
 }
 
 void show_time(clock_t t) {
-    printf("%-8s%f [s]\n", "time:", (double)(t) / CLOCKS_PER_SEC);
+    printf("%-5s : %f [s]\n", "time", (double)(t) / CLOCKS_PER_SEC);
 }
