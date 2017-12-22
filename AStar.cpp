@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 const string goal = "123456789abcdef-";
 
 long long int ida_itr = 0;
