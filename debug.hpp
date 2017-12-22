@@ -22,6 +22,7 @@ bool operator>(const State &lhs, const State &rhs) {
 
 inline bool move_panel(string &state, int move);
 inline State state_get_random(string s, int shuffle);
+inline State state_set(string s);
 inline void state_show(State state);
 
 bool move_panel(State &state, int move) {
@@ -50,6 +51,22 @@ bool move_panel(State &state, int move) {
     }
 
     return false;
+}
+
+State state_set(string s) {
+    State ret;
+
+    ret.st = s;
+    ret.depth = 0;
+    ret.cost = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (s[i] == '-') {
+            ret.blank = i;
+            break;
+        }
+    }
+
+    return ret;
 }
 
 State state_get_random(string s, int shuffle) {

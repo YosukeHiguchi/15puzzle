@@ -13,7 +13,7 @@ int h0(State state);
 int h1(State state);
 
 int main() {
-    State first = state_get_random(goal, 10);
+    State first = state_set("2348157-96afdecb");//state_get_random(goal, 10);
 
     pq.push(first);
 

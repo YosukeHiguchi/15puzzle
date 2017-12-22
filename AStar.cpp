@@ -1,34 +1,81 @@
 #include <bits/stdc++.h>
+#include <time.h>
+
 #include "state.hpp"
 
 using namespace std;
 
 const string goal = "123456789abcdef-";
 
-int astar(State first, int (*f)(State));
+bool astar(State first, int (*f)(State), int limit = -1);
 int h0(State state);
 int h1(State state);
 int h2(State state);
+void show_time(clock_t t);
 
 int main() {
+    clock_t tic, toc;
+
     int shuffle;
     cout << "Input shuffle counts >> ";
     cin >> shuffle;
 
     State first = state_get_random(goal, shuffle);
+    //State first = state_set("-c9dfbae78624351"); // 80 moves
 
     cout << "Problem: " << endl;
     state_show(first);
 
-    cout << "\nSolving with h0...\n";
+    cout << "\nSolving puzzle by A* with h0...\n";
+    tic = clock();
     astar(first, h0);
-    cout << "\nSolving with h1...\n";
+    toc = clock();
+    show_time(toc - tic);
+
+    cout << "\nSolving puzzle by A* with h1...\n";
+    tic = clock();
     astar(first, h1);
-    cout << "\nSolving with h2...\n";
+    toc = clock();
+    show_time(toc - tic);
+
+    cout << "\nSolving puzzle by A* with h2...\n";
+    tic = clock();
     astar(first, h2);
+    toc = clock();
+    show_time(toc - tic);
+
+    cout << "\nSolving puzzle by IDA* with h0...\n";
+    tic = clock();
+    for (int limit = 0; limit < 80; limit++) {
+        if (astar(first, h0, limit)) {
+            break;
+        }
+    }
+    toc = clock();
+    show_time(toc - tic);
+
+    cout << "\nSolving puzzle by IDA* with h1...\n";
+    tic = clock();
+    for (int limit = 0; limit < 80; limit++) {
+        if (astar(first, h1, limit)) {
+            break;
+        }
+    }
+    toc = clock();
+    show_time(toc - tic);
+
+    cout << "\nSolving puzzle by IDA* with h2...\n";
+    tic = clock();
+    for (int limit = 0; limit < 80; limit++) {
+        if (astar(first, h2, limit)) {
+            break;
+        }
+    }
+    toc = clock();
+    show_time(toc - tic);
 }
 
-int astar(State first, int (*f)(State)) {
+bool astar(State first, int (*f)(State), int limit) {
     priority_queue<State, vector<State>, greater<State>> pq;
     unordered_set<string> closed;
 
@@ -42,8 +89,14 @@ int astar(State first, int (*f)(State)) {
 
         if (current.st == goal) {
             //state_show(current);
-            cout << "moves: " << current.depth << endl;
-            break;
+            printf("%-8s%d\n", "moves:", current.depth);
+            printf("%-8s%d\n", "iters:", loop_cnt);
+
+            return true;
+        }
+
+        if (current.cost == limit) {
+            continue;
         }
 
         closed.insert(current.st);
@@ -63,7 +116,7 @@ int astar(State first, int (*f)(State)) {
         loop_cnt++;
     }
 
-    cout << "iters: " << loop_cnt << endl;
+    return false;
 }
 
 int h0(State state) {
@@ -97,4 +150,8 @@ int h2(State state) {
     }
 
     return cnt;
+}
+
+void show_time(clock_t t) {
+    printf("%-8s%f [s]\n", "time:", (double)(t) / CLOCKS_PER_SEC);
 }
