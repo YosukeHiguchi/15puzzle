@@ -107,6 +107,4 @@ void state_show(State state) {
         }
         cout << endl;
     }
-    //cout << state.cost << endl;
-    //cout << endl;
 }

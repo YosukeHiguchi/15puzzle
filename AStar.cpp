@@ -31,7 +31,7 @@ int main(int argv, char* argc[]) {
         first = state_get_random(goal, shuffle);
     }
 
-    cout << "\ntarget puzzle:" << endl;
+    cout << "\nTarget puzzle:" << endl;
     state_show(first);
 
     cout << "\nSolving puzzle by A* with h0...\n";
@@ -77,10 +77,9 @@ int main(int argv, char* argc[]) {
 bool astar(State first, int (*f)(State), int limit) {
     priority_queue<State, vector<State>, greater<State>> pq;
     unordered_set<string> closed;
+    long long int loop_cnt = 0;
 
     pq.push(first);
-
-    long long int loop_cnt = 0;
 
     while (!pq.empty()) {
         State current = pq.top();
@@ -93,13 +92,11 @@ bool astar(State first, int (*f)(State), int limit) {
             return true;
         }
 
-        if (limit != -1 && current.cost >= limit) {
-            ida_itr += loop_cnt;
-
-            return false;
-        }
-
         closed.insert(current.st);
+
+        if (limit != -1 && current.cost >= limit) {
+            continue;
+        }
 
         for (int i = 0; i < 4; i++) {
             State next = current;
@@ -115,6 +112,8 @@ bool astar(State first, int (*f)(State), int limit) {
 
         loop_cnt++;
     }
+
+    ida_itr += loop_cnt;
 
     return false;
 }
