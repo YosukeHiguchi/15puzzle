@@ -22,7 +22,7 @@ function astar() {
 
         if (current["st"] == goal) {
             console.log(current);
-            //canvas_draw_panel(current["st"]);
+            main_state = current;
             break;
         }
 

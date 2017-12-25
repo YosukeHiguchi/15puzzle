@@ -36,10 +36,6 @@ function move_panel(state, move, anim) {
                 swap(cnt++, idx, str, target, move)
                 if (cnt >= 6) clearInterval(intervalID);
             }, 10);
-            // setTimeout(function() {
-            //     clearInterval(intervalID);
-            //     canvas_draw_panel(newstr);
-            // }, 60);
         }
 
         state["st"] = newstr;
