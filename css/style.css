@@ -1,12 +1,25 @@
 #wrapper {
-  margin: auto;
-  width: 400px;
-  height: 400px;
+    margin: auto;
+    width: 400px;
+    height: 800px;
 }
 
 #canvas {
-  width: inherit;
-  height: inherit;
-  position: absolute;
-  background: #FFFFFF;
+    width: 400px;
+    height: 400px;
+    margin: 20px 0px;
+    position: relative;
+    background: #FFFFFF;
+}
+
+.row {
+    margin: 10px 0;
+}
+
+button {
+    width: 120px;
+}
+
+#slider .slider-selection {
+	background: #BABABA;
 }

@@ -1,7 +1,6 @@
-const N = 4;
-const goal = "123456789abcdef-";
+globalFunc();
 
-function move_panel(state, move) {
+function move_panel(state, move, anim) {
     var idx = state["blank"];
     var target = -1;
 
@@ -30,12 +29,18 @@ function move_panel(state, move) {
             }
         }
 
-        var cnt = 0;
-        var intervalID = setInterval(function(){swap(cnt++, idx, state, target, move)}, 10);
-        setTimeout(function() {
-            clearInterval(intervalID);
-            canvas_draw_panel(newstr);
-        }, 60);
+        if (anim) {
+            var cnt = 0;
+            var str = state["st"];
+            var intervalID = setInterval(function(){
+                swap(cnt++, idx, str, target, move)
+                if (cnt >= 6) clearInterval(intervalID);
+            }, 10);
+            // setTimeout(function() {
+            //     clearInterval(intervalID);
+            //     canvas_draw_panel(newstr);
+            // }, 60);
+        }
 
         state["st"] = newstr;
         state["blank"] = target;
@@ -47,7 +52,7 @@ function move_panel(state, move) {
 }
 
 function state_set(s) {
-    var ret;
+    var ret = {};
 
     ret["st"] = s;
     ret["depth"] = 0;
@@ -82,7 +87,7 @@ function state_get_random(s, shuffle) {
             r = getRandomInt(0, 3);
         } while (c != 0 && vec[r] == -1 * bef_vec);
 
-        if (move_panel(ret, r)) {
+        if (move_panel(ret, r, false)) {
             bef_vec = vec[r];
         } else {
             c--;
