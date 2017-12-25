@@ -2,18 +2,39 @@
 <head>
     <title>15Puzzle</title>
 
-    <link href="lib/bootstrap.min.css" rel="stylesheet" type="text/css"  media="all">
+    <link href="lib/css/bootstrap.min.css" rel="stylesheet" type="text/css"  media="all">
+    <link href="lib/css/bootstrap-slider.min.css" rel="stylesheet" type="text/css"  media="all">
     <link href="css/style.css" rel="stylesheet" type="text/css"  media="all">
 
-    <script src="lib/jquery-3.1.1.min.js" test="test/javascript"></script>
+    <script src="lib/js/jquery-3.1.1.min.js" test="test/javascript"></script>
+    <script src="lib/js/bootstrap-slider.min.js" test="test/javascript"></script>
+    <script src="js/global.js" test="test/javascript"></script>
     <script src="js/canvas.js" test="test/javascript"></script>
     <script src="js/state.js" test="test/javascript"></script>
     <script src="js/solve.js" test="test/javascript"></script>
-    
+
 </head>
-<body onload="canvas_init()">
+<body>
     <div id="wrapper">
         <canvas id="canvas" width="400px" height="400px"></canvas>
+        <div class="row">
+            <div class="col-xs-4">
+                <button id="btn-shuffle" type="button" class="btn btn-default btn-lg">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Shuffle
+                </button>
+            </div>
+            <div class="col-xs-8" style="padding-top:14px">
+                <input id="slider" data-slider-id='slider' type="text" data-slider-min="0" data-slider-max="40" data-slider-step="1" data-slider-value="20"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <button id="btn-solve" type="button" class="btn btn-default btn-lg">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Solve
+                </button>
+            </div>
+        </div>
     </div>
+
 </body>
 </html>

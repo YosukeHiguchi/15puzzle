@@ -1,18 +1,12 @@
-var first;
+globalFunc();
 
-function main() {
-    first = state_get_random(goal, 0);
-
-    canvas_draw_panel(first["st"]);
-
-//    astar(first);
-}
-
-function astar(first) {
+function astar() {
     var queue = [];
     var closed = new Set();
+    var track = new Map();
 
-    queue.push(first);
+    queue.push(main_state);
+    track.set(main_state["st"], null);
 
     while (queue.length > 0) {
         var min = queue[0]["cost"], minIdx = 0;
@@ -28,7 +22,7 @@ function astar(first) {
 
         if (current["st"] == goal) {
             console.log(current);
-            canvas_draw_panel(current["st"]);
+            //canvas_draw_panel(current["st"]);
             break;
         }
 
@@ -37,15 +31,25 @@ function astar(first) {
         for (var i = 0; i < 4; i++) {
             var next = Object.assign({}, current);
 
-            if (move_panel(next, i)) {
+            if (move_panel(next, i, false)) {
                 if (!closed.has(next["st"])) {
                     next["depth"]++;
                     next["cost"] = next["depth"] + f(next["st"]);
                     queue.push(next);
+                    track.set(next["st"], current["st"]);
                 }
             }
         }
     }
+
+    var backtrack = [];
+    var parent = goal;
+    while (parent != null) {
+        backtrack.push(parent);
+        parent = track.get(parent);
+    }
+
+    return backtrack;
 }
 
 function f(s) {
